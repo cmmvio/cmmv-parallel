@@ -39,11 +39,12 @@
         "lint": "pnpm run lint:spec",
         "lint:fix": "pnpm run lint:spec -- --fix",
         "release": "node release.js",
-        "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+        "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+        "sample": "node -r @swc-node/register ./sample/sample.ts"
     },
     "devDependencies": {
         "@cmmv/normalizer": "^0.0.7",
-        "@cmmv/testing": "^0.8.11",
+        "@cmmv/testing": "^0.8.15",
         "@commitlint/cli": "^19.7.1",
         "@commitlint/config-angular": "^19.7.1",
         "@commitlint/config-conventional": "^19.7.1",
@@ -73,6 +74,7 @@
         "vitest": "^3.0.5"
     },
     "dependencies": {
-        "@cmmv/core": "^0.8.11"
+        "@bnaya/objectbuffer": "^0.32.1",
+        "@cmmv/core": "^0.8.15"
     }
 }
