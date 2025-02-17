@@ -10,6 +10,12 @@ export function Parallel(options: IParallelOptions): MethodDecorator {
     };
 }
 
+export function TreadContext(namespace: string): MethodDecorator {
+    return (target, propertyKey: string | symbol) => {
+        ParallelRegistry.registerContext(target, propertyKey as string, namespace);
+    };
+}
+
 export function Tread(): ParameterDecorator {
     return (target, propertyKey: string | symbol, parameterIndex: number) => {
         ParallelRegistry.registerParam(

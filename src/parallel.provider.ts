@@ -3,16 +3,13 @@ import {
     Application
 } from "@cmmv/core";
 
-import { 
-    ParallelRegistry 
-} from "./parallel.registry";
-
+import { ParallelRegistry } from "./parallel.registry";
 import { AbstractParallel } from "./parallel.abstract";
+import { ThreadPool } from "./threadpool";
 
 @Service("parallel")
 export class ParallelProvider extends Singleton {
     public static async loadConfig(application: Application): Promise<void> {
-        const instance = ParallelProvider.getInstance();
         const controllers: any = ParallelRegistry.getControllers();
 
         controllers.forEach(async ([controllerClass, metadata]) => {
@@ -20,7 +17,7 @@ export class ParallelProvider extends Singleton {
                 Reflect.getMetadata('design:paramtypes', controllerClass) || [];
 
             const instances = paramTypes.map((paramType: any) =>
-                application.providersMap.get(paramType.name),
+                application.providersMap.get(paramType.name)
             );
 
             const controllerInstance = new controllerClass(...instances);
@@ -29,7 +26,7 @@ export class ParallelProvider extends Singleton {
                 const { handlerName, params, options } = handlerMetadata;
 
                 if(controllerInstance instanceof AbstractParallel) {
-                    controllerInstance.creataThreadPool(
+                    ThreadPool.creataThreadPool(
                         options, 
                         controllerInstance[handlerName],
                         handlerMetadata

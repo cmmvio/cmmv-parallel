@@ -1,20 +1,12 @@
 import { EventEmitter } from "node:events";
 import { Worker } from "node:worker_threads";
 
-import { 
-    createObjectBuffer, getUnderlyingArrayBuffer,
-    loadObjectBuffer 
-} from "@bnaya/objectbuffer";
-
 import {
     IParallelOptions
 } from "./parallel.interface";
 
-import { 
-    ParallelRegistry 
-} from "./parallel.registry";
-
 export class ThreadPool extends EventEmitter {
+    public static pools = new Map<string, ThreadPool>();
     protected threads: Array<Worker> = new Array<Worker>();
     private totalDataSend: number = 0;
     private totalTreadReturn: number = 0;
@@ -30,33 +22,45 @@ export class ThreadPool extends EventEmitter {
         this.createThreads(options, fn, schema);
     }
 
+    public static getThreadPool(namespace: string){
+        return ThreadPool.pools.has(namespace) ? 
+            ThreadPool.pools.get(namespace) : null;
+    }
+
+    public static creataThreadPool(
+        options: IParallelOptions, 
+        fn: Function, 
+        schema: any
+    ){
+        ThreadPool.pools.set(options.namespace, new ThreadPool(options, fn, schema));
+    }
+
     public createThreads(
         options: IParallelOptions, 
         fn: Function,
         schema: any
     ){
         const workerCode = `
-        const { parentPort, workerData } = require('worker_threads');
+        const { parentPort, workerData, threadId } = require('worker_threads');
 
         (async () => {
             try {
-                const { fn, schema } = workerData;
+                let { fn, schema } = workerData;
                 const executeFn = new Function('return (' + fn + ')')();
+                schema = JSON.parse(schema);
 
-                parentPort.once('message', async (payload) => {
+                parentPort.on('message', async (payload) => {
                     try {
-                        console.log(payload);
                         const args = new Array(schema.params.length);
 
                         for (const param of schema.params) {
                             if (param.paramType === "data") 
-                                args[param.index] = payload;
+                                args[param.index] = JSON.parse(payload);
                             else if (param.paramType === "thread") 
-                                args[param.index] = { threadId: workerData.threadId };            
+                                args[param.index] = { threadId: threadId, parentPort };            
                         }
 
-                        const result = await executeFn(...args);
-                        parentPort.postMessage(result);
+                        await executeFn(...args);
                     } catch (error) {
                         console.error(\`Thread [\${workerData.threadId}]: \`, error.message)
                         parentPort.postMessage({ error: error.message });
@@ -94,9 +98,16 @@ export class ThreadPool extends EventEmitter {
         }
     }
 
-    public send(payload: any){
-        if (this.threads.length === 0) 
+    public send(payload: object | string, schema: any) {
+        if (this.threads.length === 0) {
+            console.error("No workers available")
             throw new Error("No workers available");
+        }  
+
+        if(typeof payload === "object" && !schema)
+            payload = JSON.stringify(payload);
+        else if(typeof payload === "object" && schema)
+            payload = schema(payload);
 
         this.threadWorkPointer++;
         const randomIndex = Math.floor(Math.random() * this.threads.length);
@@ -106,6 +117,7 @@ export class ThreadPool extends EventEmitter {
             this.totalDataSend++;
             worker.postMessage(payload);
         } else {
+            console.error("No available worker found.")
             throw new Error("No available worker found.");
         }
     }
@@ -124,5 +136,19 @@ export class ThreadPool extends EventEmitter {
     private transformFunction(fn: Function): string {
         const fnString = fn.toString().replace(/^async\s+\w+\s*\((.*?)\)/, 'async ($1) =>');
         return `(${fnString})`;
+    }
+
+    private awaitEnd(){
+        return new Promise((resolve, reject) => {
+            try{
+                let persistence = setInterval(() => {
+                    if(this.endDataMark && this.totalDataSend === this.totalTreadReturn){
+                        clearInterval(persistence);
+                        resolve(true);
+                    }
+                }, 100);
+            }
+            catch{ resolve(false); }
+        });
     }
 }

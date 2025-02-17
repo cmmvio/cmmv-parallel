@@ -40,7 +40,7 @@
         "lint:fix": "pnpm run lint:spec -- --fix",
         "release": "node release.js",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-        "sample": "node -r @swc-node/register ./sample/sample.ts"
+        "sample": "bun ./sample/sample.ts"
     },
     "devDependencies": {
         "@cmmv/normalizer": "^0.0.7",
