@@ -29,6 +29,10 @@
         "importHelpers": true,
         "lib": ["esnext", "dom"],
         "types": ["node"],
+        "paths": {
+            "@cmmv/parallel": ["src"],
+            "@cmmv/parallel/*": ["src/*"]
+        }
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules", "dist", "**/*.spec.ts"]
