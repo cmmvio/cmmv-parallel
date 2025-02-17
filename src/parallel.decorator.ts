@@ -4,6 +4,7 @@ import {
     IParallelOptions
 } from "./parallel.interface";
 
+
 export function Parallel(options: IParallelOptions): MethodDecorator {
     return (target, propertyKey: string | symbol) => {
         ParallelRegistry.registerHandler(target, propertyKey as string, options);
@@ -11,8 +12,8 @@ export function Parallel(options: IParallelOptions): MethodDecorator {
 }
 
 export function TreadContext(namespace: string): MethodDecorator {
-    return (target, propertyKey: string | symbol) => {
-        ParallelRegistry.registerContext(target, propertyKey as string, namespace);
+    return (target, propertyKey: string | symbol, context?: any) => {
+        ParallelRegistry.registerContext(target, namespace, context.value);
     };
 }
 

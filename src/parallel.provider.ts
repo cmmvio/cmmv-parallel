@@ -13,6 +13,7 @@ export class ParallelProvider extends Singleton {
         const controllers: any = ParallelRegistry.getControllers();
 
         controllers.forEach(async ([controllerClass, metadata]) => {
+            
             const paramTypes =
                 Reflect.getMetadata('design:paramtypes', controllerClass) || [];
 
@@ -23,14 +24,17 @@ export class ParallelProvider extends Singleton {
             const controllerInstance = new controllerClass(...instances);
 
             metadata.handlers.forEach(handlerMetadata => {
-                const { handlerName, params, options } = handlerMetadata;
+                const { handlerName, options, context } = handlerMetadata;
 
-                if(controllerInstance instanceof AbstractParallel) {
-                    ThreadPool.creataThreadPool(
-                        options, 
-                        controllerInstance[handlerName],
-                        handlerMetadata
-                    );
+                if(options && !ThreadPool.hasThreadPool(options.namespace)){
+                    if(controllerInstance instanceof AbstractParallel) {
+                        ThreadPool.createThreadPool(
+                            options, 
+                            controllerInstance[handlerName],
+                            handlerMetadata,
+                            context
+                        );
+                    }
                 }
             });
         })

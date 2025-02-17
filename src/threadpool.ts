@@ -12,14 +12,16 @@ export class ThreadPool extends EventEmitter {
     private totalTreadReturn: number = 0;
     private threadWorkPointer: number = 0;
     private endDataMark: boolean = false;
+    private threadIndex = 0;
 
     constructor(
         options: IParallelOptions,
         fn: Function,
-        schema: any
+        schema: any,
+        context?: Function
     ){
         super();
-        this.createThreads(options, fn, schema);
+        this.createThreads(options, fn, schema, context);
     }
 
     public static getThreadPool(namespace: string){
@@ -27,26 +29,34 @@ export class ThreadPool extends EventEmitter {
             ThreadPool.pools.get(namespace) : null;
     }
 
-    public static creataThreadPool(
+    public static hasThreadPool(namespace: string){
+        return ThreadPool.pools.has(namespace);
+    }
+
+    public static createThreadPool(
         options: IParallelOptions, 
         fn: Function, 
-        schema: any
+        schema: any,
+        context?: Function
     ){
-        ThreadPool.pools.set(options.namespace, new ThreadPool(options, fn, schema));
+        ThreadPool.pools.set(options.namespace, new ThreadPool(options, fn, schema, context));
     }
 
     public createThreads(
         options: IParallelOptions, 
         fn: Function,
-        schema: any
+        schema: any,
+        context?: Function
     ){
         const workerCode = `
         const { parentPort, workerData, threadId } = require('worker_threads');
 
         (async () => {
             try {
-                let { fn, schema } = workerData;
-                const executeFn = new Function('return (' + fn + ')')();
+                let { schema } = workerData;
+                const contextFn = ${context ? this.transformFunction(context) : 'null'};
+                const scope = (contextFn) ? await contextFn() : {};
+                const executeFn = ${this.transformFunction(fn)};
                 schema = JSON.parse(schema);
 
                 parentPort.on('message', async (payload) => {
@@ -57,10 +67,11 @@ export class ThreadPool extends EventEmitter {
                             if (param.paramType === "data") 
                                 args[param.index] = JSON.parse(payload);
                             else if (param.paramType === "thread") 
-                                args[param.index] = { threadId: threadId, parentPort };            
+                                args[param.index] = { threadId: threadId, parentPort, ...scope };            
                         }
 
                         await executeFn(...args);
+                        //console.log(\`[\${threadId}] process\`)
                     } catch (error) {
                         console.error(\`Thread [\${workerData.threadId}]: \`, error.message)
                         parentPort.postMessage({ error: error.message });
@@ -71,14 +82,23 @@ export class ThreadPool extends EventEmitter {
                 parentPort.postMessage({ error: error.message });
             }
         })();`;
-
+        
         for(let i = 0; i < options.threads; i++){
             const worker = new Worker(workerCode, {
                 eval: true,
+                stdout: true,
                 workerData: { 
                     fn: this.transformFunction(fn), 
-                    schema: JSON.stringify(schema) 
+                    schema: JSON.stringify(schema)
                 }
+            });
+
+            worker.stdout.on("data", (data) => {
+                console.log(`[Worker] ${data.toString().trim()}`);
+            });
+            
+            worker.stderr.on("data", (data) => {
+                console.error(`[Worker Error] ${data.toString().trim()}`);
             });
     
             worker.on("message", (data) => {
@@ -110,8 +130,8 @@ export class ThreadPool extends EventEmitter {
             payload = schema(payload);
 
         this.threadWorkPointer++;
-        const randomIndex = Math.floor(Math.random() * this.threads.length);
-        const worker = this.threads[randomIndex];
+        const worker = this.threads[this.threadIndex];
+        this.threadIndex = (this.threadIndex + 1) % this.threads.length;
 
         if (worker) {
             this.totalDataSend++;
@@ -143,6 +163,7 @@ export class ThreadPool extends EventEmitter {
             try{
                 let persistence = setInterval(() => {
                     if(this.endDataMark && this.totalDataSend === this.totalTreadReturn){
+                        this.emit('end');
                         clearInterval(persistence);
                         resolve(true);
                     }

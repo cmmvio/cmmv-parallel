@@ -31,23 +31,23 @@
         ]
     },
     "scripts": {
-        "build:cjs": "tsc --project tsconfig.cjs.json",
-        "build:esm": "tsc --project tsconfig.esm.json",
-        "build": "npm run build:cjs && npm run build:esm",
-        "test": "",
+        "build": "cmmv build",
+        "test": "vitest",
         "prepare": "husky",
-        "lint": "pnpm run lint:spec",
-        "lint:fix": "pnpm run lint:spec -- --fix",
-        "release": "node release.js",
+        "lint": "cmmv lint",
+        "release": "cmmv release",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-        "sample": "bun ./sample/sample.ts"
+        "generate": "cmmv run ./sample/generatebigjson.ts",
+        "sample": "cmmv run ./sample/sample.ts"
     },
     "devDependencies": {
+        "@cmmv/cli": "^0.5.9",
         "@cmmv/normalizer": "^0.0.7",
         "@cmmv/testing": "^0.8.15",
         "@commitlint/cli": "^19.7.1",
         "@commitlint/config-angular": "^19.7.1",
         "@commitlint/config-conventional": "^19.7.1",
+        "@faker-js/faker": "^9.5.0",
         "@swc-node/core": "^1.13.3",
         "@swc-node/register": "^1.10.9",
         "@swc/core": "^1.10.15",
@@ -75,6 +75,7 @@
     },
     "dependencies": {
         "@bnaya/objectbuffer": "^0.32.1",
-        "@cmmv/core": "^0.8.15"
+        "@cmmv/core": "^0.8.15",
+        "ora": "^8.2.0"
     }
 }

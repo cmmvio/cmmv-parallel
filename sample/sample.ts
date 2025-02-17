@@ -13,7 +13,8 @@ import {
     AbstractParallel,
     Parallel, Tread, 
     ThreadData, ParallelModule, 
-    ParallelProvider, ThreadPool
+    ParallelProvider, ThreadPool,
+    TreadContext
 } from "../src";
 
 export class ReadBigFileWithParallel extends AbstractParallel {
@@ -25,17 +26,23 @@ export class ReadBigFileWithParallel extends AbstractParallel {
         const filename = path.resolve('./sample/large-customers.json');
 
         if(pool){
-            const start = Date.now();
+            let start;
+            console.log('Parser With Multi-Thread...');
             const readStream = fs.createReadStream(path.resolve(filename));
             const jsonStream = readStream.pipe(parser()).pipe(streamArray());
 
-            pool.on('data', ({ data, index }) => finalData[index] = data);
+            pool.on('data', async ({ data, index }) => finalData[index] = data);
             pool.on('end', () => {
                 const end = Date.now();
-                console.log(`Parallel parser: ${finalData.length} | ${end - start}ms`);
+                console.log(`Parallel parser: ${finalData.length} | ${(end - start).toFixed(2)}s`);
             });
     
-            jsonStream.on('data', ({ value, key }) => pool.send({ value, index: key }));
+            jsonStream.on('data', async ({ value, key }) => {
+                if(!start)
+                    start = Date.now();
+
+                pool.send({ value, index: key })
+            });
             jsonStream.on('end', () => pool.endData());
             jsonStream.on('error', error => console.error(error));
 
@@ -46,16 +53,19 @@ export class ReadBigFileWithParallel extends AbstractParallel {
         }
     }
 
-    /*@TreadContext("parserLine")
-    async threadContext() {
-        
-    }*/
-
     @Parallel({
         namespace: "parserLine",
-        threads: 6
+        threads: 3
     })
     async parserLine(@Tread() thread: any, @ThreadData() payload: any) {
+        thread.parentPort.postMessage({ 
+            data: await thread.jsonParser.parser(payload.value), 
+            index: payload.index 
+        });
+    }
+
+    @TreadContext("parserLine")
+    async threadContext() {
         const { 
             JSONParser, AbstractParserSchema,
             ToObjectId, ToLowerCase, ToDate 
@@ -81,12 +91,7 @@ export class ReadBigFileWithParallel extends AbstractParallel {
         }
 
         const jsonParser = new JSONParser({ schema: CustomerSchema });
-        //return { jsonParser };
-
-        thread.parentPort.postMessage({ 
-            data: await jsonParser.parser(payload.value), 
-            index: payload.index 
-        });
+        return { jsonParser }; 
     }
 }
 
@@ -104,6 +109,7 @@ export class ReadBigFileWithoutParallel {
 
         if(pool){
             const start = Date.now();
+            console.log('Parser Without Multi-Thread...');
 
             class CustomerSchema extends AbstractParserSchema {
                 public field = {
@@ -131,7 +137,7 @@ export class ReadBigFileWithoutParallel {
             .pipe(async data => finalData.push(data))
             .once('end', () => {
                 const end = Date.now();
-                console.log(`Single parser: ${finalData.length} | ${end - start}ms`);
+                console.log(`Single parser: ${finalData.length} | ${(end - start).toFixed(2)}s`);
             })
             .once('error', (error) => console.error(error))
             .start();
