@@ -3,19 +3,20 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { parser } from 'stream-json';
 import { streamArray } from 'stream-json/streamers/StreamArray';
+import * as msgpack from "msgpack-lite";
 
-import { 
+import {
     Application, Hooks,
     HooksType, Hook
 } from "@cmmv/core";
 
 import {
     AbstractParallel,
-    Parallel, Tread, 
-    ThreadData, ParallelModule, 
+    Parallel, Tread,
+    ThreadData, ParallelModule,
     ParallelProvider, ThreadPool,
     TreadContext
-} from "../src";
+} from "../src/main";
 
 export class ReadBigFileWithParallel extends AbstractParallel {
     @Hook(HooksType.onInitialize)
@@ -31,12 +32,14 @@ export class ReadBigFileWithParallel extends AbstractParallel {
             const readStream = fs.createReadStream(path.resolve(filename));
             const jsonStream = readStream.pipe(parser()).pipe(streamArray());
 
-            pool.on('data', async ({ data, index }) => finalData[index] = data);
+            pool.on('data', async (response) => {
+                finalData[response.index] = response.data
+            });
             pool.on('end', () => {
                 const end = Date.now();
                 console.log(`Parallel parser: ${finalData.length} | ${(end - start).toFixed(2)}s`);
             });
-    
+
             jsonStream.on('data', async ({ value, key }) => {
                 if(!start)
                     start = Date.now();
@@ -55,27 +58,28 @@ export class ReadBigFileWithParallel extends AbstractParallel {
 
     @Parallel({
         namespace: "parserLine",
-        threads: 3
+        threads: 6
     })
     async parserLine(@Tread() thread: any, @ThreadData() payload: any) {
-        thread.parentPort.postMessage({ 
-            data: await thread.jsonParser.parser(payload.value), 
-            index: payload.index 
-        });
+        return {
+            data: await thread.jsonParser.parser(payload.value),
+            index: payload.index
+        }
     }
 
     @TreadContext("parserLine")
     async threadContext() {
-        const { 
+        const {
             JSONParser, AbstractParserSchema,
-            ToObjectId, ToLowerCase, ToDate 
+            ToObjectId, ToLowerCase, ToDate
         } = await import("@cmmv/normalizer");
+
+        const msgpack = await import("msgpack-lite");
 
         class CustomerSchema extends AbstractParserSchema {
             public field = {
                 id: {
-                    to: 'id',
-                    transform: [ToObjectId],
+                    to: 'id'
                 },
                 name: { to: 'name' },
                 email: {
@@ -91,16 +95,16 @@ export class ReadBigFileWithParallel extends AbstractParallel {
         }
 
         const jsonParser = new JSONParser({ schema: CustomerSchema });
-        return { jsonParser }; 
+        return { jsonParser, msgpack };
     }
 }
 
 export class ReadBigFileWithoutParallel {
     @Hook(HooksType.onInitialize)
     async start() {
-        const { 
+        const {
             JSONParser, AbstractParserSchema,
-            ToObjectId, ToLowerCase, ToDate 
+            ToObjectId, ToLowerCase, ToDate
         } = await import("@cmmv/normalizer");
         const finalData = new Array<any>();
         const poolNamespace= "parserLine";
@@ -130,7 +134,7 @@ export class ReadBigFileWithoutParallel {
                 };
             }
 
-            const jsonParser = new JSONParser({ 
+            const jsonParser = new JSONParser({
                 schema: CustomerSchema,
                 input: filename
             })
