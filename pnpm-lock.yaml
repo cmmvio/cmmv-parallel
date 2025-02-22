@@ -12,8 +12,11 @@ importers:
         specifier: ^0.32.1
         version: 0.32.1
       '@cmmv/core':
-        specifier: ^0.8.18
-        version: 0.8.18
+        specifier: ^0.8.20
+        version: 0.8.20
+      fast-thread:
+        specifier: ^0.0.5
+        version: 0.0.5
       ora:
         specifier: ^8.2.0
         version: 8.2.0
@@ -25,8 +28,8 @@ importers:
         specifier: ^0.0.7
         version: 0.0.7(typescript@5.7.3)
       '@cmmv/testing':
-        specifier: ^0.8.18
-        version: 0.8.18
+        specifier: ^0.8.20
+        version: 0.8.20
       '@commitlint/cli':
         specifier: ^19.7.1
         version: 19.7.1(@types/node@22.13.4)(typescript@5.7.3)
@@ -97,8 +100,8 @@ packages:
   '@cmmv/core@0.6.7':
     resolution: {integrity: sha512-gJCKHx6UCXZ8RgLjlSp2M8HiUxzlyaEB0eoWVRFA7EJUi72YAxHLx8hh6+glWlMV2LnfIXnohEJwYpCGCoKrXA==}
 
-  '@cmmv/core@0.8.18':
-    resolution: {integrity: sha512-E0DUHvaUm6ba4D5RIgvEluMNDbDx4j6Nc66ULvatTY8nct5HlNqIeLvVJeFFGh7CEGZIzqdLb/dPyI85gPHJUw==}
+  '@cmmv/core@0.8.20':
+    resolution: {integrity: sha512-sY+m2TTHQMafA8rSWU2sP9y8dwmbLf/CnRsrMzWbwzUe7c4/UMGGJG2vaRslcwbfIA9KJaDDAjbpYacr3Qqwtg==}
 
   '@cmmv/encryptor@0.6.5':
     resolution: {integrity: sha512-ciWpJffiR29CI+bIxOa75de+4ov5VMhpK0SuShEd7RsbbeAR+qAAI1BNK/9/KN6XyAWS84XwJ5Fi2/VnyQM4iA==}
@@ -108,8 +111,8 @@ packages:
     resolution: {integrity: sha512-xWxvqDN3dLWMXl9Y+Y+SHaWdt20lzN837Oj1/oQ5JgNNz332hc07Gf9sUqBlj8xmfDceoi1/2b6aIZnmLv3HAQ==}
     engines: {node: '>= 18.18.0 || >= 20.0.0'}
 
-  '@cmmv/testing@0.8.18':
-    resolution: {integrity: sha512-a6tgvZosIEdtAkfLwYDOt6br0xWTntzLuidREmwXLekEwjK6XiGVzpmlPIoE1mppm1e1I9w1pRAwU3aRi9lsUA==}
+  '@cmmv/testing@0.8.20':
+    resolution: {integrity: sha512-/XFNNTvwx1VJIePVpKmTNfJN+wA50hHMp0fWhaGl/0mnBb8+SLFZxF3XNPxLqZe65xbyYDeN3vLPvdOUno7vfQ==}
 
   '@commitlint/cli@19.7.1':
     resolution: {integrity: sha512-iObGjR1tE/PfDtDTEfd+tnRkB3/HJzpQqRTyofS2MPPkDn1mp3DBC8SoPDayokfAy+xKhF8+bwRCJO25Nea0YQ==}
@@ -531,6 +534,10 @@ packages:
     resolution: {integrity: sha512-DWUB2pksgNEb6Bz2fggIy1wh6fGgZP4Xyy/Mt0QZPiloKKXerbqq9D3SBQTlCRYOrcRPu4vuz+CGjwdfqxnoWA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@eslint/core@0.12.0':
+    resolution: {integrity: sha512-cmrR6pytBuSMTaBweKoGMwu3EiHiEC+DoyupPmlZ0HxBJBtIxwe+j/E4XPIKNx+Q74c8lXKPwYawBf5glsTkHg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
   '@eslint/eslintrc@3.2.0':
     resolution: {integrity: sha512-grOjVNN8P3hjJn/eIETF1wwd12DdnwFDoyceUJLYYdkpbwq3nLi+4fqrTAONx7XDALqlL220wC/RHSC/QTI/0w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -543,8 +550,8 @@ packages:
     resolution: {integrity: sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/plugin-kit@0.2.6':
-    resolution: {integrity: sha512-+0TjwR1eAUdZtvv/ir1mGX+v0tUoR3VEPB8Up0LLJC+whRW0GgBBtpbOkg/a/U4Dxa6l5a3l9AJ1aWIQVyoWJA==}
+  '@eslint/plugin-kit@0.2.7':
+    resolution: {integrity: sha512-JubJ5B2pJ4k4yGxaNLdbjrnk9d/iDz6/q8wOilpIowd6PJPgaxCuHBnBszq7Ce2TyMrywm5r4PnKm6V3iiZF+g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@faker-js/faker@9.5.0':
@@ -709,8 +716,8 @@ packages:
     resolution: {integrity: sha512-zM0mVWSXE0a0h9aKACLwKmD6nHcRiKrPpCfvaKqG1CqDEyjEawId0ocXxVzPMCAm6kkWr2P025msfxXEnt8UGQ==}
     engines: {node: '>= 10'}
 
-  '@napi-rs/wasm-runtime@0.2.6':
-    resolution: {integrity: sha512-z8YVS3XszxFTO73iwvFDNpQIzdMmSDTP/mB3E/ucR37V3Sx57hSExcXyMoNwaucWxnsWf4xfbZv0iZ30jr0M4Q==}
+  '@napi-rs/wasm-runtime@0.2.7':
+    resolution: {integrity: sha512-5yximcFK5FNompXfJFoWanu5l8v1hNGqNHh9du1xETp9HWk/B/PzvchX55WYOPaIeNglG8++68AAiauBAtbnzw==}
 
   '@noble/hashes@1.7.1':
     resolution: {integrity: sha512-B8XBPsn4vT/KJAGqDzbwztd+6Yte3P4V7iafm24bxgDe/mlRuK6xmWPuCNrKt2vDafZ8MfJLlchDG/vYafQEjQ==}
@@ -1767,6 +1774,9 @@ packages:
   fast-levenshtein@2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
 
+  fast-thread@0.0.5:
+    resolution: {integrity: sha512-OQYzu/b53blOEhyz7ETKKDlNPrATqhcpk0fRLzyaeczN/njN/WlkE77wNhGmPHurZLskAYD2GCWI19zWUpMb4g==}
+
   fast-uri@3.0.6:
     resolution: {integrity: sha512-Atfo14OibSv5wAp4VWNsFYE1AchQRTv9cBGWET4pZWHzYshFSS9NQI6I57rdKn9croWVMbYFbLhJ+yJvmZIIHw==}
 
@@ -2268,11 +2278,11 @@ packages:
   mongodb-connection-string-url@3.0.2:
     resolution: {integrity: sha512-rMO7CGo/9BFwyZABcKAWL8UJwH/Kc2x0g72uhDWzG48URRax5TCIcJ7Rc3RZqffZzO/Gwff/jyKwCU9TN8gehA==}
 
-  mongodb@6.13.0:
-    resolution: {integrity: sha512-KeESYR5TEaFxOuwRqkOm3XOsMqCSkdeDMjaW5u2nuKfX7rqaofp7JQGoi7sVqQcNJTKuveNbzZtWMstb8ABP6Q==}
+  mongodb@6.13.1:
+    resolution: {integrity: sha512-gdq40tX8StmhP6akMp1pPoEVv+9jTYFSrga/g23JxajPAQhH39ysZrHGzQCSd9PEOnuEQEdjIWqxO7ZSwC0w7Q==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
-      '@aws-sdk/credential-providers': ^3.188.0
+      '@aws-sdk/credential-providers': ^3.632.0
       '@mongodb-js/zstd': ^1.1.0 || ^2.0.0
       gcp-metadata: ^5.2.0
       kerberos: ^2.0.1
@@ -3086,7 +3096,7 @@ snapshots:
 
   '@cmmv/cli@0.5.9(@swc/types@0.1.17)(@types/node@22.13.4)(conventional-commits-filter@5.0.0)(eslint@9.20.1(jiti@2.4.2))':
     dependencies:
-      '@cmmv/core': 0.8.18
+      '@cmmv/core': 0.8.20
       '@commitlint/cli': 19.7.1(@types/node@22.13.4)(typescript@5.7.3)
       '@commitlint/config-angular': 19.7.1
       '@commitlint/config-conventional': 19.7.1
@@ -3144,7 +3154,7 @@ snapshots:
       uglify-js: 3.19.3
       uuid: 10.0.0
 
-  '@cmmv/core@0.8.18':
+  '@cmmv/core@0.8.20':
     dependencies:
       class-transformer: 0.5.1
       class-validator: 0.14.1
@@ -3173,7 +3183,7 @@ snapshots:
       class-transformer: 0.5.1
       class-validator: 0.14.1
       fast-json-stringify: 6.0.1
-      mongodb: 6.13.0
+      mongodb: 6.13.1
       reflect-metadata: 0.2.2
       sax: 1.4.1
       stream-json: 1.9.1
@@ -3188,9 +3198,9 @@ snapshots:
       - socks
       - typescript
 
-  '@cmmv/testing@0.8.18':
+  '@cmmv/testing@0.8.20':
     dependencies:
-      '@cmmv/core': 0.8.18
+      '@cmmv/core': 0.8.20
 
   '@commitlint/cli@19.7.1(@types/node@22.13.4)(typescript@5.7.3)':
     dependencies:
@@ -3505,6 +3515,10 @@ snapshots:
     dependencies:
       '@types/json-schema': 7.0.15
 
+  '@eslint/core@0.12.0':
+    dependencies:
+      '@types/json-schema': 7.0.15
+
   '@eslint/eslintrc@3.2.0':
     dependencies:
       ajv: 6.12.6
@@ -3523,9 +3537,9 @@ snapshots:
 
   '@eslint/object-schema@2.1.6': {}
 
-  '@eslint/plugin-kit@0.2.6':
+  '@eslint/plugin-kit@0.2.7':
     dependencies:
-      '@eslint/core': 0.11.0
+      '@eslint/core': 0.12.0
       levn: 0.4.1
 
   '@faker-js/faker@9.5.0': {}
@@ -3650,7 +3664,7 @@ snapshots:
       '@napi-rs/nice-win32-x64-msvc': 1.0.1
     optional: true
 
-  '@napi-rs/wasm-runtime@0.2.6':
+  '@napi-rs/wasm-runtime@0.2.7':
     dependencies:
       '@emnapi/core': 1.3.1
       '@emnapi/runtime': 1.3.1
@@ -3697,7 +3711,7 @@ snapshots:
 
   '@oxc-resolver/binding-wasm32-wasi@1.12.0':
     dependencies:
-      '@napi-rs/wasm-runtime': 0.2.6
+      '@napi-rs/wasm-runtime': 0.2.7
     optional: true
 
   '@oxc-resolver/binding-win32-arm64-msvc@1.12.0':
@@ -4638,7 +4652,7 @@ snapshots:
       '@eslint/core': 0.11.0
       '@eslint/eslintrc': 3.2.0
       '@eslint/js': 9.20.0
-      '@eslint/plugin-kit': 0.2.6
+      '@eslint/plugin-kit': 0.2.7
       '@humanfs/node': 0.16.6
       '@humanwhocodes/module-importer': 1.0.1
       '@humanwhocodes/retry': 0.4.2
@@ -4779,6 +4793,10 @@ snapshots:
       rfdc: 1.4.1
 
   fast-levenshtein@2.0.6: {}
+
+  fast-thread@0.0.5:
+    dependencies:
+      fast-json-stringify: 6.0.1
 
   fast-uri@3.0.6: {}
 
@@ -5230,7 +5248,7 @@ snapshots:
       '@types/whatwg-url': 11.0.5
       whatwg-url: 14.1.1
 
-  mongodb@6.13.0:
+  mongodb@6.13.1:
     dependencies:
       '@mongodb-js/saslprep': 1.2.0
       bson: 6.10.3

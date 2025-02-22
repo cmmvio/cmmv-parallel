@@ -30,11 +30,13 @@ export class ReadBigFileWithParallel extends AbstractParallel {
             let start;
             console.log('Parser With Multi-Thread...');
             const readStream = fs.createReadStream(path.resolve(filename));
+            await pool.awaitStart();
             const jsonStream = readStream.pipe(parser()).pipe(streamArray());
 
-            pool.on('data', async (response) => {
-                finalData[response.index] = response.data
+            pool.on('message', async (response) => {
+                finalData[response.index] = response.data;
             });
+
             pool.on('end', () => {
                 const end = Date.now();
                 console.log(`Parallel parser: ${finalData.length} | ${(end - start).toFixed(2)}s`);
@@ -44,8 +46,9 @@ export class ReadBigFileWithParallel extends AbstractParallel {
                 if(!start)
                     start = Date.now();
 
-                pool.send({ value, index: key })
+                pool.send({ value, index: key });
             });
+
             jsonStream.on('end', () => pool.endData());
             jsonStream.on('error', error => console.error(error));
 
@@ -58,7 +61,7 @@ export class ReadBigFileWithParallel extends AbstractParallel {
 
     @Parallel({
         namespace: "parserLine",
-        threads: 6
+        threads: 3
     })
     async parserLine(@Tread() thread: any, @ThreadData() payload: any) {
         return {
@@ -74,13 +77,9 @@ export class ReadBigFileWithParallel extends AbstractParallel {
             ToObjectId, ToLowerCase, ToDate
         } = await import("@cmmv/normalizer");
 
-        const msgpack = await import("msgpack-lite");
-
         class CustomerSchema extends AbstractParserSchema {
             public field = {
-                id: {
-                    to: 'id'
-                },
+                id: { to: 'id' },
                 name: { to: 'name' },
                 email: {
                     to: 'email',
@@ -95,7 +94,7 @@ export class ReadBigFileWithParallel extends AbstractParallel {
         }
 
         const jsonParser = new JSONParser({ schema: CustomerSchema });
-        return { jsonParser, msgpack };
+        return { jsonParser };
     }
 }
 
