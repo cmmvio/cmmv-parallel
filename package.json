@@ -9,6 +9,7 @@
         "threads",
         "workers"
     ],
+    "files": ["dist"],
     "main": "./dist/cjs/main.js",
     "module": "./dist/esm/main.js",
     "types": "./dist/types/main.d.ts",
