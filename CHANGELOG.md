@@ -1,3 +1,12 @@
+## [0.0.5](https://github.com/cmmvio/cmmv-parallel/compare/v0.0.4...v0.0.5) (2025-02-23)
+
+
+### Bug Fixes
+
+* remove sample files ([a2db566](https://github.com/cmmvio/cmmv-parallel/commit/a2db566f0bf1746ba763dbc81e316235a5839f24))
+
+
+
 ## [0.0.4](https://github.com/cmmvio/cmmv-parallel/compare/v0.0.3...v0.0.4) (2025-02-23)
 
 

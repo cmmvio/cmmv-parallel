@@ -1,6 +1,6 @@
 {
     "name": "@cmmv/parallel",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Multi-thread parallelism module for CMMV",
     "keywords": [
         "cmmv",
@@ -9,7 +9,9 @@
         "threads",
         "workers"
     ],
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "main": "./dist/cjs/main.js",
     "module": "./dist/esm/main.js",
     "types": "./dist/types/main.d.ts",
