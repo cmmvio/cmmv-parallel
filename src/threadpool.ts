@@ -97,7 +97,9 @@ export class ThreadPool extends EventEmitter {
                         }
                     }
 
-                    setImmediate(async () => await processData());
+                    processData()
+
+                    //setImmediate(async () => await processData());
                 } catch (error) {
                     console.log(error);
                 }
