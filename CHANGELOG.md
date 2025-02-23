@@ -1,3 +1,12 @@
+## [0.0.4](https://github.com/cmmvio/cmmv-parallel/compare/v0.0.3...v0.0.4) (2025-02-23)
+
+
+### Bug Fixes
+
+* package ([7083779](https://github.com/cmmvio/cmmv-parallel/commit/70837798acab278b977c95895cba1d33891af7c7))
+
+
+
 ## [0.0.3](https://github.com/cmmvio/cmmv-parallel/compare/v0.0.2...v0.0.3) (2025-02-23)
 
 
